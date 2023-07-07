@@ -14,14 +14,14 @@ from rest_framework import status
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     def validate(self, attrs):
-        data = super().validate(self.user)
+        data = super().validate(attrs)
 
         serializer = UserSerializerWithToken(self.user).data
         for k, v in serializer.items():
             data[k] = v
-        # ...
 
         return data
+
     
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
@@ -47,7 +47,6 @@ def registerUser(request):
 @permission_classes([IsAuthenticated])
 def getUserProfile(request):
     user = request.user
-    products = Product.objects.all()
     serializer = UserSerializer(user, many=False)
     return Response(serializer.data)
 
